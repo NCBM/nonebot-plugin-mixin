@@ -4,7 +4,7 @@
 注意：本插件并不保证更改会被稳定应用，部分插件可能会在运行时修改自身部分行为。
 """
 
-from functools import reduce
+from functools import partial, reduce
 import json
 from operator import and_
 from pathlib import Path
@@ -194,6 +194,7 @@ def update_priority(ma: Type[Matcher], before: int, after: int):
 
 
 def multi_mixin(mixin_: Iterable[Mixin] = mixins):
+    move = []
     for pri, mas in matchers.items():
         matched = [
             x for x in mixin_
@@ -210,8 +211,10 @@ def multi_mixin(mixin_: Iterable[Mixin] = mixins):
                     continue
                 mixin(ma, pair.dest)
                 if (prio := pair.dest.priority) is not None:
-                    update_priority(ma, pri, prio)
+                    move.append(partial(update_priority, ma, pri, prio))
                 break
+    for f in move:
+        f()
 
 
 def read_mixin(*files: Union[str, Path]) -> Iterable[List[Any]]:
