@@ -1,0 +1,15 @@
+[project]
+name = "nonebot-plugin-mixin"
+version = "0.1.0"
+description = "运行时修改 NoneBot2 插件行为"
+authors = [
+    {name = "HivertMoZara", email = "worldmozara@163.com"},
+]
+license = {text = "MIT"}
+dependencies = ["nonebot2>=2.0.0b1"]
+requires-python = ">=3.8"
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/NCBM/nonebot-plugin-mixin"
+Repository = "https://github.com/NCBM/nonebot-plugin-mixin"
