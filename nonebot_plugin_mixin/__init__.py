@@ -153,6 +153,7 @@ class MixinQuery(BaseModel):
 class MixinData(BaseModel):
     type: Optional[str] = None
     rule: MixinRule = Field(default_factory=MixinRule)
+    rule_override: bool = False
     priority: Optional[int] = None
     block: Optional[bool] = None
 
@@ -168,7 +169,7 @@ mixins: List[Mixin] = []
 def mixin(ma: Type[Matcher], ch: MixinData):
     if ch.type is not None:
         ma.type = ch.type
-    ma.rule = ch.rule.to_rule(ma.rule)
+    ma.rule = ch.rule.to_rule(None if ch.rule_override else ma.rule)
     if ch.priority is not None:
         # This operation only changes the priority in the matcher, which
         # means another place the priority stored in should also be changed.
