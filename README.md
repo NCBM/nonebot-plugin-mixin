@@ -96,7 +96,7 @@ mixin.multi_mixin(my_mixins)
 
 ```text
 mixin: Mixin
-    source: MixinQuery
+    source: MixinQuery  # 此段参数只用于查询要修改的 Matcher
         plugin_name: *str
         module_name: *str
         type: *str
@@ -123,9 +123,29 @@ mixin: Mixin
             to_me: bool = False
         priority: *int
         block: *bool
-    dest: MixinData
+    dest: MixinData  # 此段参数只用于选择性修改 Matcher 的属性
         type: *str
         rule: *MixinRule
+            startswith: *CaseMatch
+                msg: Tuple[str, ...]
+                ignorecase: bool = False
+            endswith: *CaseMatch
+                msg: Tuple[str, ...]
+                ignorecase: bool = False
+            fullmatch: *CaseMatch
+                msg: Tuple[str, ...]
+                ignorecase: bool = False
+            keywords: *Tuple[str, ...]
+                "keyword1"
+                ...
+            command: *Tuple[Tuple[str, ...]]
+                ("command1",)
+                ("command2", "sub")
+                ...
+            regex: *ReMatch
+                regex: str
+                flags: int = 0
+            to_me: bool = False
         priority: *int
         block: *bool
 ```
