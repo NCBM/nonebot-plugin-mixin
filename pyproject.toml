@@ -1,7 +1,7 @@
 [project]
 name = "nonebot-plugin-mixin"
 version = "0.1.0"
-description = "运行时修改 NoneBot2 插件行为"
+description = "通过代码或非代码方式外部介入 NoneBot2 插件行为"
 authors = [
     {name = "HivertMoZara", email = "worldmozara@163.com"},
 ]
