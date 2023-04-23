@@ -146,7 +146,7 @@ mixin: Mixin
                 regex: str
                 flags: int = 0
             to_me: bool = False
-        rule_override: bool = False  # 为 True 时完全覆盖 rule 数据
+        rule_override: bool = False  # 为 True 时完全覆盖 rule 数据 (v0.1.1 新增)
         priority: *int
         block: *bool
 ```
