@@ -191,6 +191,9 @@ def update_priority(ma: Type[Matcher], before: int, after: int):
     matchers[after] = matchers.get(after, []) + [ma]
     matchers[before].remove(ma)
     logger.info(f"已移动 {ma!r} 的优先级 ({before} -> {after})")
+    if not matchers[before]:
+        del matchers[before]
+        logger.debug("已移除旧优先级的空槽位")
 
 
 def multi_mixin(mixin_: Iterable[Mixin] = mixins):
