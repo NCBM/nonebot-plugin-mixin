@@ -8,7 +8,7 @@ from functools import partial, reduce
 import json
 from operator import and_
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
+from typing import Any, Iterable, List, Optional, Tuple, Type, Union
 from nonebot import get_driver, logger
 from nonebot.internal.matcher import Matcher, matchers
 from nonebot.internal.rule import Rule
