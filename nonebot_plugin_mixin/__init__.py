@@ -17,12 +17,20 @@ from nonebot.rule import (
     KeywordsRule, CommandRule, RegexRule, ToMeRule,
     command
 )
+from nonebot.plugin import PluginMetadata
 from pydantic import BaseModel, Field
 
 from .config import Config
 
 global_config = get_driver().config
 config_ = Config.parse_obj(global_config)
+
+__plugin_meta__ = PluginMetadata(
+    name="Mixin",
+    description="通过代码或非代码方式外部介入 NoneBot2 插件行为",
+    usage="[请查阅插件介绍文档]",
+    config=Config
+)
 
 driver = get_driver()
 
