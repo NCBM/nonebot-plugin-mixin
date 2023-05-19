@@ -9,7 +9,7 @@ import json
 from operator import and_
 from pathlib import Path
 from typing import Any, Iterable, List, Optional, Tuple, Type, Union
-from nonebot import get_driver, logger
+from nonebot import get_driver, logger, __version__ as nbver
 from nonebot.internal.matcher import Matcher, matchers
 from nonebot.internal.rule import Rule
 from nonebot.rule import (
@@ -25,11 +25,28 @@ from .config import Config
 global_config = get_driver().config
 config_ = Config.parse_obj(global_config)
 
+_extra_meta_source = {
+    "type": "library",
+    "homepage": "https://github.com/NCBM/nonebot-plugin-mixin"
+}
+
+if (
+    not nbver
+    or not nbver.startswith("2.0.0")
+    or not (_suf := nbver[5:])
+    or _suf[0] not in "abr"
+    or (_suf.startswith("rc") and int(_suf[2:]) > 4)
+):
+    _extra_meta = _extra_meta_source
+else:
+    _extra_meta = {"extra": _extra_meta_source}
+
 __plugin_meta__ = PluginMetadata(
     name="Mixin",
     description="通过代码或非代码方式外部介入 NoneBot2 插件行为",
     usage="[请查阅插件介绍文档]",
-    config=Config
+    config=Config,
+    **_extra_meta
 )
 
 driver = get_driver()
