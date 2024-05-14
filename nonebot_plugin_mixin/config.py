@@ -1,8 +1,9 @@
 from typing import List
-from pydantic import BaseModel, Extra, Field
+
+from pydantic import BaseModel, Field
 
 
-class Config(BaseModel, extra=Extra.ignore):
+class Config(BaseModel, extra="ignore"):
     """Plugin Config Here"""
 
     mixin_source: List[str] = Field(default_factory=list)

@@ -4,49 +4,39 @@
 注意：本插件并不保证更改会被稳定应用，部分插件可能会在运行时修改自身部分行为。
 """
 
-from functools import partial, reduce
 import json
+from functools import partial, reduce
 from operator import and_
 from pathlib import Path
 from typing import Any, Iterable, List, Optional, Tuple, Type, Union
-from nonebot import get_driver, logger, __version__ as nbver
+
+from nonebot import get_driver, get_plugin_config, logger
 from nonebot.internal.matcher import Matcher, matchers
 from nonebot.internal.rule import Rule
-from nonebot.rule import (
-    StartswithRule, EndswithRule, FullmatchRule,
-    KeywordsRule, CommandRule, RegexRule, ToMeRule,
-    command
-)
 from nonebot.plugin import PluginMetadata
+from nonebot.rule import (
+    CommandRule,
+    EndswithRule,
+    FullmatchRule,
+    KeywordsRule,
+    RegexRule,
+    StartswithRule,
+    ToMeRule,
+    command,
+)
 from pydantic import BaseModel, Field
 
 from .config import Config
 
-global_config = get_driver().config
-config_ = Config.parse_obj(global_config)
-
-_extra_meta_source = {
-    "type": "library",
-    "homepage": "https://github.com/NCBM/nonebot-plugin-mixin"
-}
-
-if (
-    not nbver
-    or not nbver.startswith("2.0.0")
-    or not (_suf := nbver[5:])
-    or _suf[0] not in "abr"
-    or (_suf.startswith("rc") and int(_suf[2:]) > 4)
-):
-    _extra_meta = _extra_meta_source
-else:
-    _extra_meta = {"extra": _extra_meta_source}
+config_ = get_plugin_config(Config)
 
 __plugin_meta__ = PluginMetadata(
     name="Mixin",
     description="通过代码或非代码方式外部介入 NoneBot2 插件行为",
     usage="[请查阅插件介绍文档]",
-    config=Config,
-    **_extra_meta
+    type="library",
+    homepage="https://github.com/NCBM/nonebot-plugin-mixin",
+    config=Config
 )
 
 driver = get_driver()
@@ -136,15 +126,15 @@ class MixinRule(BaseModel):
                 tmp.append(sub.call)
         for loc, obj in complex_rules:
             if loc is not None:
-                rule &= obj(**loc.dict())
+                rule &= obj(**loc.model_dump())
             else:
-                rule: Rule = reduce(
+                rule = reduce(
                     and_, filter(lambda x: isinstance(x, obj), tmp), rule
                 )
         if self.keywords is not None:
             rule &= KeywordsRule(*self.keywords)
         else:
-            rule: Rule = reduce(
+            rule = reduce(
                 and_, filter(lambda x: isinstance(x, KeywordsRule), tmp), rule
             )
         if self.command is not None:
@@ -262,7 +252,7 @@ def read_mixin(*files: Union[str, Path]) -> Iterable[List[Any]]:
 
 def parse_mixin(*rules: Any):
     for r in rules:
-        mixins.append(Mixin.parse_obj(r))
+        mixins.append(Mixin.model_validate(r))
 
 
 @driver.on_startup
